@@ -1,0 +1,227 @@
+.search-box {
+  background: #ffffff;
+  border-radius: 30px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.store-brand-title {
+  font-size: clamp(1.15rem, 4vw, 1.75rem);
+}
+
+.section-title {
+  letter-spacing: -1px;
+}
+
+.search-box:focus-within {
+  border-color: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.nav-categories {
+  background-color: #111111;
+  border-bottom: 1px solid #222222;
+}
+
+.nav-categories a {
+  color: #a1a1aa;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-categories a:hover,
+.nav-categories a.active {
+  background-color: #ffffff;
+  color: #000000 !important;
+}
+
+.top-promo-bar {
+  background-color: #ffea00;
+  color: #000000;
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.hero-video-section {
+  position: relative;
+  height: 62vh;
+  min-height: 380px;
+  max-height: 620px;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+@media (max-width: 576px) {
+  .hero-video-section {
+    height: 52vh;
+    min-height: 300px;
+  }
+
+  .hero-video-overlay p {
+    font-size: 0.9rem;
+  }
+}
+
+.hero-video-section video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  opacity: 0.75;
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #ffffff;
+  padding: 0 20px;
+}
+
+.hero-video-overlay h1 {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  margin-bottom: 12px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.hero-video-overlay p {
+  color: #e5e5e5;
+  max-width: 560px;
+  margin: 0 auto 24px;
+  font-size: 1.05rem;
+}
+
+.hero-video-overlay .btn-buy-custom {
+  padding: 12px 32px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero-mute-toggle {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease;
+}
+
+.hero-mute-toggle:hover {
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+}
+
+.hero-video-fallback video {
+  display: none;
+}
+
+.hero-video-fallback {
+  background: linear-gradient(135deg, #111111 0%, #000000 60%, #1a1a1a 100%);
+}
+
+.hero-video-fallback .hero-mute-toggle {
+  display: none;
+}
+
+.promo-card {
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  padding: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.promo-card:hover {
+  transform: translateY(-4px);
+  cursor: pointer;
+  background-color: #222222;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.promo-outline {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+}
+
+.promo-outline:hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.product-card {
+  border-radius: 16px !important;
+  border: none !important;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.product-img-container {
+  position: relative;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin: 8px;
+  overflow: hidden;
+}
+
+.badge-category {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 2;
+}

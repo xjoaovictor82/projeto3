@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e5e7eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="300" fill="#f8f9fa"/>
+  <path d="M100 40 L60 70 L75 105 L100 90 L100 260 L200 260 L200 90 L225 105 L240 70 L200 40 L175 55 Q150 68 125 55 Z"
+        fill="url(#g2)" stroke="#111111" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M125 55 Q150 68 175 55" fill="none" stroke="#111111" stroke-width="4"/>
+  <text x="150" y="165" font-family="Arial, sans-serif" font-size="26" font-weight="800" fill="#111111" text-anchor="middle" letter-spacing="1">SPORTFIT</text>
+  <rect x="95" y="85" width="110" height="6" fill="#ffea00"/>
+</svg>

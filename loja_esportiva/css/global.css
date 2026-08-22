@@ -1,0 +1,30 @@
+body {
+  background-color: #f4f5f7;
+  color: #111111;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+}
+
+.bg-black-custom {
+  background-color: #000000;
+}
+
+.brand-title {
+  letter-spacing: -1px;
+}
+
+.btn-buy-custom {
+  background-color: #ffea00;
+  color: #000000;
+  border-radius: 10px;
+  font-weight: 800;
+  padding: 10px;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-buy-custom:hover {
+  background-color: #ffd600;
+  color: #000000;
+  transform: scale(1.02);
+}

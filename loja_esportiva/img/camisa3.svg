@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <rect width="300" height="300" fill="#f8f9fa"/>
+  <path d="M110 45 L75 65 L85 95 L110 82 L110 250 L190 250 L190 82 L215 95 L225 65 L190 45 L170 58 Q150 68 130 58 Z"
+        fill="#1d4ed8" stroke="#0b1f6b" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M130 58 Q150 68 170 58" fill="none" stroke="#0b1f6b" stroke-width="4"/>
+  <text x="150" y="160" font-family="Arial, sans-serif" font-size="22" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="1">SPORTFIT</text>
+  <rect x="105" y="78" width="90" height="5" fill="#ffea00"/>
+</svg>
