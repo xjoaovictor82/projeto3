@@ -1,0 +1,114 @@
+/* Cards de Ofertas Rápidas */
+.promo-card {
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  padding: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.promo-card:hover {
+  transform: translateY(-4px);
+  cursor: pointer;
+  background-color: #222222;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.promo-outline {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+}
+
+.promo-outline:hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Cards de Produtos */
+.product-card {
+  border-radius: 16px !important;
+  border: none !important;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background: #ffffff;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.product-img-container {
+  position: relative;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin: 8px;
+  overflow: hidden;
+}
+
+.badge-category {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 2;
+}
+
+/* Itens dentro do painel do carrinho */
+.carrinho-item-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f8f9fa;
+  flex-shrink: 0;
+}
+
+.carrinho-qtd-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.carrinho-qtd-btn:hover {
+  background: #f1f1f1;
+}
+
+/* Botão Amarelo de Alta Conversão */
+.btn-buy-custom {
+  background-color: #ffea00;
+  color: #000000;
+  border-radius: 10px;
+  font-weight: 800;
+  padding: 10px;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-buy-custom:hover {
+  background-color: #ffd600;
+  color: #000000;
+  transform: scale(1.02);
+}

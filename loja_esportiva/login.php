@@ -21,8 +21,86 @@ $csrfToken = $_SESSION['csrf_token'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/login.css">
+    <style>
+        body {
+            background-color: #f4f5f7;
+            color: #111111;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .login-card {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .login-header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 32px;
+            text-align: center;
+        }
+        .btn-buy-custom {
+            background-color: #ffea00;
+            color: #000000;
+            border-radius: 10px;
+            font-weight: 800;
+            padding: 10px;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-buy-custom:hover {
+            background-color: #ffd600;
+            color: #000000;
+            transform: scale(1.02);
+        }
+        .btn-buy-custom:disabled {
+            opacity: 0.75;
+            transform: none;
+            cursor: not-allowed;
+        }
+        .form-control:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 0.2rem rgba(0,0,0,0.1);
+        }
+        .form-control.is-invalid:focus {
+            box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.15);
+        }
+        .campo-senha-wrapper {
+            position: relative;
+        }
+        .btn-toggle-senha {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            padding: 0 14px;
+            border: none;
+            background: transparent;
+            color: #6c757d;
+        }
+        .btn-toggle-senha:hover {
+            color: #000000;
+        }
+        .credenciais-teste {
+            background-color: #f4f5f7;
+            border: 1px dashed #c9c9c9;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #444;
+        }
+        .credenciais-teste b {
+            color: #111111;
+        }
+        .spinner-border-sm-custom {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -30,7 +108,7 @@ $csrfToken = $_SESSION['csrf_token'];
             <div class="col-11 col-sm-8 col-md-5 col-lg-4">
                 <div class="card login-card">
                     <div class="login-header">
-                        <h3 class="fw-extrabold m-0 brand-title login-brand-title">
+                        <h3 class="fw-extrabold m-0" style="letter-spacing: -1px;">
                             <i class="bi bi-lightning-charge-fill text-warning"></i> SPORTFIT
                         </h3>
                         <p class="mb-0 small text-white-50 mt-1">Painel Administrativo</p>

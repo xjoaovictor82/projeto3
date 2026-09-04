@@ -1,0 +1,10 @@
+@media (max-width: 576px) {
+  .hero-video-section {
+    height: 52vh;
+    min-height: 300px;
+  }
+
+  .hero-video-overlay p {
+    font-size: 0.9rem;
+  }
+}

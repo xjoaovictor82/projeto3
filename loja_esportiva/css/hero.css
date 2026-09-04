@@ -1,0 +1,97 @@
+/* Hero em vídeo no topo da loja */
+.hero-video-section {
+  position: relative;
+  height: 62vh;
+  min-height: 380px;
+  max-height: 620px;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+.hero-video-section video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  opacity: 0.75;
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #ffffff;
+  padding: 0 20px;
+}
+
+.hero-video-overlay h1 {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  margin-bottom: 12px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.hero-video-overlay p {
+  color: #e5e5e5;
+  max-width: 560px;
+  margin: 0 auto 24px;
+  font-size: 1.05rem;
+}
+
+.hero-video-overlay .btn-buy-custom {
+  padding: 12px 32px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero-mute-toggle {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease;
+}
+
+.hero-mute-toggle:hover {
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+}
+
+/* Caso o vídeo não consiga carregar */
+.hero-video-fallback video {
+  display: none;
+}
+
+.hero-video-fallback {
+  background: linear-gradient(135deg, #111111 0%, #000000 60%, #1a1a1a 100%);
+}
+
+.hero-video-fallback .hero-mute-toggle {
+  display: none;
+}

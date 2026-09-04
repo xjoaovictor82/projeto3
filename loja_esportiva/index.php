@@ -8,8 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 
@@ -18,7 +17,7 @@
         <div class="container py-3">
             <div class="row align-items-center g-2">
                 <div class="col-6 col-md-2 order-md-0">
-                    <h3 class="fw-extrabold m-0 tracking-wider cursor-pointer btn-categoria brand-title store-brand-title" data-categoria="todas">
+                    <h3 class="fw-extrabold m-0 tracking-wider cursor-pointer btn-categoria" data-categoria="todas" style="letter-spacing: -1px; font-size: clamp(1.15rem, 4vw, 1.75rem);">
                         <i class="bi bi-lightning-charge-fill text-warning"></i> SPORTFIT
                     </h3>
                 </div>
@@ -109,7 +108,7 @@
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-6">
-                    <h3 class="fw-extrabold text-uppercase mb-3 section-title">
+                    <h3 class="fw-extrabold text-uppercase mb-3" style="letter-spacing: -1px;">
                         <i class="bi bi-lightning-charge-fill text-warning"></i> Sobre a SportFit
                     </h3>
                     <p class="text-white-50 mb-3">
@@ -158,6 +157,54 @@
     <footer class="bg-black-custom text-white-50 text-center py-3 small border-top border-secondary">
         &copy; <?php echo date('Y'); ?> SportFit Store — Projeto acadêmico ADS.
     </footer>
+
+    <!-- Carrinho: abre na própria página como painel lateral, sem sair da loja -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCarrinho" aria-labelledby="offcanvasCarrinhoLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold" id="offcanvasCarrinhoLabel">
+                <i class="bi bi-bag-check-fill text-warning me-1"></i> Seu carrinho
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column p-0">
+            <div id="carrinho-itens" class="flex-grow-1 overflow-auto px-3 pt-3"></div>
+            <div class="border-top p-3 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="fw-semibold text-muted">Total</span>
+                    <span class="fw-extrabold fs-4" id="carrinho-total">R$ 0,00</span>
+                </div>
+                <button type="button" class="btn btn-buy-custom w-100" id="btn-finalizar-compra">
+                    <i class="bi bi-credit-card-fill me-2"></i>Finalizar compra
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detalhe rápido do produto: abre na própria página ao clicar no card -->
+    <div class="modal fade" id="modalDetalheProduto" tabindex="-1" aria-labelledby="modalDetalheProdutoLabel">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border-radius: 16px;">
+                <div class="modal-header border-0 pb-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body pt-0" id="detalhe-produto-corpo">
+                    <!-- Preenchido em JS ao abrir -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificação de "adicionado ao carrinho": substitui o alert() do navegador -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+        <div id="toast-carrinho" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center" id="toast-carrinho-texto">
+                    <i class="bi bi-check-circle-fill text-warning me-2"></i>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
