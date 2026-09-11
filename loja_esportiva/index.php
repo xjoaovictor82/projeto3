@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel='stylesheet' href='css/index.css'>
 </head>
 <body>
 
@@ -17,7 +17,7 @@
         <div class="container py-3">
             <div class="row align-items-center g-2">
                 <div class="col-6 col-md-2 order-md-0">
-                    <h3 class="fw-extrabold m-0 tracking-wider cursor-pointer btn-categoria" data-categoria="todas" style="letter-spacing: -1px; font-size: clamp(1.15rem, 4vw, 1.75rem);">
+                    <h3 class="fw-extrabold m-0 tracking-wider cursor-pointer btn-categoria store-logo">
                         <i class="bi bi-lightning-charge-fill text-warning"></i> SPORTFIT
                     </h3>
                 </div>
@@ -108,7 +108,7 @@
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-6">
-                    <h3 class="fw-extrabold text-uppercase mb-3" style="letter-spacing: -1px;">
+                    <h3 class="fw-extrabold text-uppercase mb-3 store-logo">
                         <i class="bi bi-lightning-charge-fill text-warning"></i> Sobre a SportFit
                     </h3>
                     <p class="text-white-50 mb-3">
@@ -158,50 +158,125 @@
         &copy; <?php echo date('Y'); ?> SportFit Store — Projeto acadêmico ADS.
     </footer>
 
-    <!-- Carrinho: abre na própria página como painel lateral, sem sair da loja -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCarrinho" aria-labelledby="offcanvasCarrinhoLabel">
+    <!-- Modal de Checkout: abre ao clicar em "Comprar", com opções de
+         pagamento (Débito, Crédito e Pix) igual a uma loja de verdade. -->
+    <div class="modal fade" id="modal-checkout" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-bag-check-fill me-2"></i>Finalizar compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Tela de pagamento -->
+                    <div id="checkout-tela-pagamento">
+                        <!-- Resumo do produto -->
+                        <div class="checkout-resumo-produto d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <p class="text-muted small mb-1">Produto</p>
+                                <p class="fw-bold mb-0" id="checkout-nome-produto">-</p>
+                            </div>
+                            <div class="text-end">
+                                <p class="text-muted small mb-1">Total</p>
+                                <p class="fw-extrabold mb-0 fs-5" id="checkout-preco-produto">-</p>
+                            </div>
+                        </div>
+
+                        <p class="fw-semibold mb-2">Escolha a forma de pagamento</p>
+                        <div class="checkout-metodos mb-4">
+                            <div class="metodo-pagamento" data-metodo="credito">
+                                <i class="bi bi-credit-card-fill"></i>
+                                <span>Crédito</span>
+                            </div>
+                            <div class="metodo-pagamento" data-metodo="debito">
+                                <i class="bi bi-credit-card-2-back-fill"></i>
+                                <span>Débito</span>
+                            </div>
+                            <div class="metodo-pagamento" data-metodo="pix">
+                                <i class="bi bi-qr-code"></i>
+                                <span>Pix</span>
+                            </div>
+                        </div>
+
+                        <!-- Formulário Cartão (Crédito e Débito usam o mesmo formulário) -->
+                        <div class="checkout-form-pagamento" id="checkout-form-cartao">
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Número do cartão</label>
+                                <input type="text" class="form-control" id="checkout-cartao-numero" placeholder="0000 0000 0000 0000" maxlength="19">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Nome impresso no cartão</label>
+                                <input type="text" class="form-control" id="checkout-cartao-nome" placeholder="Como está no cartão">
+                            </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Validade</label>
+                                    <input type="text" class="form-control" id="checkout-cartao-validade" placeholder="MM/AA" maxlength="5">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">CVV</label>
+                                    <input type="text" class="form-control" id="checkout-cartao-cvv" placeholder="123" maxlength="4">
+                                </div>
+                            </div>
+                            <div class="mb-2" id="checkout-parcelas-wrapper">
+                                <label class="form-label small fw-semibold">Parcelas</label>
+                                <select class="form-select" id="checkout-cartao-parcelas">
+                                    <option value="1">1x sem juros</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Pix -->
+                        <div class="checkout-form-pagamento" id="checkout-form-pix">
+                            <div class="checkout-pix-box">
+                                <div class="pix-icone"><i class="bi bi-qr-code"></i></div>
+                                <p class="fw-semibold mb-1">Pague com Pix</p>
+                                <p class="text-muted small mb-0">Escaneie o QR Code ou copie o código abaixo no app do seu banco. Aprovação em poucos segundos.</p>
+                                <div class="input-group mt-3">
+                                    <input type="text" class="form-control text-truncate" id="checkout-pix-codigo" value="00020126580014BR.GOV.BCB.PIX0136sportfit-store-simulacao520400005303986540510.005802BR5913SportFit Loja6009SAO PAULO62070503***6304ABCD" readonly>
+                                    <button class="btn btn-outline-dark" type="button" id="btn-copiar-pix"><i class="bi bi-clipboard"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tela de sucesso -->
+                    <div class="checkout-sucesso" id="checkout-tela-sucesso">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <h5 class="fw-bold mt-3 mb-1">Pedido confirmado!</h5>
+                        <p class="text-muted mb-0">Recebemos seu pagamento e já vamos preparar seu produto para envio.</p>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-0 pt-0" id="checkout-rodape-pagamento">
+                    <button type="button" class="btn btn-light w-100 mb-2" data-bs-dismiss="modal">Continuar comprando</button>
+                    <button type="button" class="btn btn-finalizar-compra w-100" id="btn-finalizar-compra" disabled>Selecione uma forma de pagamento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel lateral do Carrinho: abre ao clicar no botão do carrinho -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-carrinho" aria-labelledby="offcanvas-carrinho-titulo">
         <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title fw-bold" id="offcanvasCarrinhoLabel">
-                <i class="bi bi-bag-check-fill text-warning me-1"></i> Seu carrinho
+            <h5 class="offcanvas-title fw-bold" id="offcanvas-carrinho-titulo">
+                <i class="bi bi-bag-check-fill me-2"></i>Seu carrinho
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
         </div>
         <div class="offcanvas-body d-flex flex-column p-0">
-            <div id="carrinho-itens" class="flex-grow-1 overflow-auto px-3 pt-3"></div>
-            <div class="border-top p-3 bg-white">
+            <div id="carrinho-lista" class="flex-grow-1 overflow-auto px-3">
+                <!-- Itens do carrinho gerados via JS (js/app.js) -->
+            </div>
+            <div class="border-top p-3 cart-footer" id="carrinho-rodape">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="fw-semibold text-muted">Total</span>
-                    <span class="fw-extrabold fs-4" id="carrinho-total">R$ 0,00</span>
+                    <span class="fw-semibold">Total</span>
+                    <span class="fw-extrabold fs-5" id="carrinho-total">R$ 0,00</span>
                 </div>
-                <button type="button" class="btn btn-buy-custom w-100" id="btn-finalizar-compra">
-                    <i class="bi bi-credit-card-fill me-2"></i>Finalizar compra
+                <button class="btn btn-finalizar-compra w-100" id="btn-finalizar-carrinho">
+                    <i class="bi bi-lock-fill me-2"></i>Finalizar compra
                 </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Detalhe rápido do produto: abre na própria página ao clicar no card -->
-    <div class="modal fade" id="modalDetalheProduto" tabindex="-1" aria-labelledby="modalDetalheProdutoLabel">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content" style="border-radius: 16px;">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body pt-0" id="detalhe-produto-corpo">
-                    <!-- Preenchido em JS ao abrir -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notificação de "adicionado ao carrinho": substitui o alert() do navegador -->
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
-        <div id="toast-carrinho" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body d-flex align-items-center" id="toast-carrinho-texto">
-                    <i class="bi bi-check-circle-fill text-warning me-2"></i>
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
             </div>
         </div>
     </div>

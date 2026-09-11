@@ -10,10 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const API_PRODUTOS = "api/listas_produtos.php";
 const API_CATEGORIAS = "api/categorias.php";
 let todosProdutos = [];
-let carrinhoItens = [];
-// Instâncias Bootstrap (criadas uma vez, reaproveitadas em todo clique)
-let offcanvasCarrinho = null;
-let modalDetalheProduto = null;
 function normalizarTexto(texto) {
     if (!texto)
         return "";
@@ -50,165 +46,6 @@ function mostrarPlaceholder(img, icone, cor) {
 }
 // Expõe para o atributo onerror inline no HTML gerado
 window.mostrarPlaceholder = mostrarPlaceholder;
-function formatarMoeda(valor) {
-    return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
-// ============================================================
-// Carrinho
-// ============================================================
-function atualizarContadorCarrinho() {
-    const total = carrinhoItens.reduce((soma, item) => soma + item.quantidade, 0);
-    const contadorCarrinho = document.getElementById("cart-count");
-    if (contadorCarrinho)
-        contadorCarrinho.innerText = String(total);
-}
-function mostrarToast(mensagem) {
-    const toastEl = document.getElementById("toast-carrinho");
-    const textoEl = document.getElementById("toast-carrinho-texto");
-    if (!toastEl || !textoEl)
-        return;
-    textoEl.innerHTML = `<i class="bi bi-check-circle-fill text-warning me-2"></i>${mensagem}`;
-    // @ts-ignore - bootstrap vem do bundle carregado via CDN, sem tipos
-    const toast = new bootstrap.Toast(toastEl, { delay: 2500 });
-    toast.show();
-}
-function adicionarAoCarrinho(produto, quantidade = 1) {
-    const existente = carrinhoItens.find((i) => i.id === produto.id);
-    const preco = parseFloat(produto.preco_venda);
-    if (existente) {
-        existente.quantidade = Math.min(existente.quantidade + quantidade, produto.estoque_atual);
-    }
-    else {
-        carrinhoItens.push({
-            id: produto.id,
-            nome: produto.nome,
-            preco,
-            imagem: produto.imagem,
-            categoria: produto.categoria,
-            estoque_atual: produto.estoque_atual,
-            quantidade: Math.min(quantidade, produto.estoque_atual),
-        });
-    }
-    atualizarContadorCarrinho();
-    renderizarCarrinho();
-    mostrarToast(`"${produto.nome}" adicionado ao carrinho!`);
-}
-function alterarQuantidade(id, delta) {
-    const item = carrinhoItens.find((i) => i.id === id);
-    if (!item)
-        return;
-    item.quantidade += delta;
-    if (item.quantidade <= 0) {
-        carrinhoItens = carrinhoItens.filter((i) => i.id !== id);
-    }
-    else if (item.quantidade > item.estoque_atual) {
-        item.quantidade = item.estoque_atual;
-    }
-    atualizarContadorCarrinho();
-    renderizarCarrinho();
-}
-function removerDoCarrinho(id) {
-    carrinhoItens = carrinhoItens.filter((i) => i.id !== id);
-    atualizarContadorCarrinho();
-    renderizarCarrinho();
-}
-function itemCarrinhoHtml(item) {
-    const estilo = estiloCategoria(item.categoria);
-    const temImagem = Boolean(item.imagem && item.imagem.trim() !== "");
-    const imagemHtml = temImagem
-        ? `<img src="${item.imagem}" alt="${item.nome}" class="carrinho-item-img" onerror="mostrarPlaceholder(this, '${estilo.icone}', '${estilo.cor}')">`
-        : `<div class="carrinho-item-img d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, ${estilo.cor}, #000000);"><i class="bi ${estilo.icone} text-warning"></i></div>`;
-    const subtotal = formatarMoeda(item.preco * item.quantidade);
-    return `
-    <div class="d-flex align-items-center gap-3 py-3 border-bottom" data-id-carrinho="${item.id}">
-      ${imagemHtml}
-      <div class="flex-grow-1">
-        <p class="fw-semibold mb-1 small">${item.nome}</p>
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="carrinho-qtd-btn btn-diminuir" data-id="${item.id}">−</button>
-          <span class="fw-semibold" style="min-width: 20px; text-align: center;">${item.quantidade}</span>
-          <button type="button" class="carrinho-qtd-btn btn-aumentar" data-id="${item.id}">+</button>
-        </div>
-      </div>
-      <div class="text-end">
-        <p class="fw-bold mb-1 small">${subtotal}</p>
-        <button type="button" class="btn btn-sm btn-link text-danger p-0 btn-remover-item" data-id="${item.id}">
-          <i class="bi bi-trash"></i>
-        </button>
-      </div>
-    </div>`;
-}
-function renderizarCarrinho() {
-    const container = document.getElementById("carrinho-itens");
-    const totalEl = document.getElementById("carrinho-total");
-    if (!container || !totalEl)
-        return;
-    if (carrinhoItens.length === 0) {
-        container.innerHTML = `
-      <div class="text-center text-muted py-5">
-        <i class="bi bi-bag-x" style="font-size: 2.5rem;"></i>
-        <p class="mt-3 mb-0">Seu carrinho está vazio.</p>
-      </div>`;
-        totalEl.innerText = formatarMoeda(0);
-        return;
-    }
-    container.innerHTML = carrinhoItens.map(itemCarrinhoHtml).join("");
-    const total = carrinhoItens.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
-    totalEl.innerText = formatarMoeda(total);
-    container.querySelectorAll(".btn-aumentar").forEach((btn) => {
-        btn.onclick = () => alterarQuantidade(Number(btn.getAttribute("data-id")), 1);
-    });
-    container.querySelectorAll(".btn-diminuir").forEach((btn) => {
-        btn.onclick = () => alterarQuantidade(Number(btn.getAttribute("data-id")), -1);
-    });
-    container.querySelectorAll(".btn-remover-item").forEach((btn) => {
-        btn.onclick = () => removerDoCarrinho(Number(btn.getAttribute("data-id")));
-    });
-}
-// ============================================================
-// Detalhe rápido do produto (abre em modal, na própria página)
-// ============================================================
-function abrirDetalheProduto(produto) {
-    const corpo = document.getElementById("detalhe-produto-corpo");
-    if (!corpo || !modalDetalheProduto)
-        return;
-    const precoFormatado = formatarMoeda(parseFloat(produto.preco_venda));
-    const esgotado = produto.estoque_atual <= 0;
-    const estilo = estiloCategoria(produto.categoria);
-    const temImagem = Boolean(produto.imagem && produto.imagem.trim() !== "");
-    const imagemHtml = temImagem
-        ? `<img src="${produto.imagem}" alt="${produto.nome}" class="w-100 h-100" style="object-fit: contain;" onerror="mostrarPlaceholder(this, '${estilo.icone}', '${estilo.cor}')">`
-        : `<div class="d-flex align-items-center justify-content-center h-100" style="background: linear-gradient(135deg, ${estilo.cor}, #000000); border-radius: 12px;"><i class="bi ${estilo.icone} text-warning" style="font-size: 4.5rem;"></i></div>`;
-    const botaoHtml = esgotado
-        ? `<button class="btn btn-secondary w-100 rounded-3 py-2 fw-semibold" disabled>Esgotado</button>`
-        : `<button class="btn btn-buy-custom w-100" id="btn-comprar-detalhe"><i class="bi bi-cart-plus me-2"></i>Adicionar ao carrinho</button>`;
-    corpo.innerHTML = `
-    <div class="row g-4">
-      <div class="col-md-6">
-        <div class="product-img-container p-3" style="height: 320px; cursor: default;">
-          <span class="badge-category">${produto.categoria}</span>
-          ${imagemHtml}
-        </div>
-      </div>
-      <div class="col-md-6 d-flex flex-column">
-        <h4 class="fw-bold text-dark mb-2">${produto.nome}</h4>
-        <p class="text-muted mb-3"><i class="bi bi-box-seam me-1"></i>Estoque: ${produto.estoque_atual} unidade(s)</p>
-        <h3 class="fw-extrabold text-dark mb-4">${precoFormatado}</h3>
-        <div class="mt-auto">${botaoHtml}</div>
-      </div>
-    </div>`;
-    const btnComprar = document.getElementById("btn-comprar-detalhe");
-    if (btnComprar) {
-        btnComprar.onclick = () => {
-            adicionarAoCarrinho(produto);
-            modalDetalheProduto.hide();
-        };
-    }
-    modalDetalheProduto.show();
-}
-// ============================================================
-// Categorias e vitrine
-// ============================================================
 function carregarCategorias() {
     return __awaiter(this, void 0, void 0, function* () {
         const nav = document.getElementById("nav-categorias");
@@ -266,32 +103,284 @@ function renderizarProdutos(lista) {
         return;
     }
     vitrine.innerHTML = lista.map(cartaoProduto).join("");
-    // Clique em qualquer parte do card abre o detalhe rápido (mesma página)
-    document.querySelectorAll(".product-card").forEach((card) => {
-        card.onclick = () => {
-            const id = Number(card.getAttribute("data-id"));
-            const produto = todosProdutos.find((p) => p.id === id);
-            if (produto)
-                abrirDetalheProduto(produto);
-        };
-    });
-    // Clique no botão "Comprar" adiciona direto ao carrinho, sem abrir o detalhe
     document.querySelectorAll(".btn-comprar").forEach((btn) => {
-        btn.onclick = (evento) => {
-            evento.stopPropagation();
-            const id = Number(btn.getAttribute("data-id"));
-            const produto = todosProdutos.find((p) => p.id === id);
-            if (produto)
-                adicionarAoCarrinho(produto);
+        btn.onclick = () => {
+            var _a, _b, _c;
+            const nome = (_a = btn.getAttribute("data-nome")) !== null && _a !== void 0 ? _a : "";
+            const preco = parseFloat((_b = btn.getAttribute("data-preco")) !== null && _b !== void 0 ? _b : "0");
+            const imagem = (_c = btn.getAttribute("data-imagem")) !== null && _c !== void 0 ? _c : "";
+            adicionarAoCarrinho(nome, preco, imagem);
+            mostrarFeedbackComprar(btn);
         };
     });
 }
+let carrinho = [];
+function mostrarFeedbackComprar(botao) {
+    const htmlOriginal = botao.innerHTML;
+    botao.innerHTML = `<i class="bi bi-check-lg me-2"></i>Adicionado!`;
+    botao.classList.add("adicionado");
+    botao.disabled = true;
+    setTimeout(() => {
+        botao.innerHTML = htmlOriginal;
+        botao.classList.remove("adicionado");
+        botao.disabled = false;
+    }, 900);
+}
+function adicionarAoCarrinho(nome, preco, imagem) {
+    const itemExistente = carrinho.find((item) => item.nome === nome);
+    if (itemExistente) {
+        itemExistente.quantidade++;
+    }
+    else {
+        carrinho.push({ nome, preco, imagem, quantidade: 1 });
+    }
+    atualizarContadorCarrinho();
+}
+function atualizarContadorCarrinho() {
+    const total = carrinho.reduce((soma, item) => soma + item.quantidade, 0);
+    const contadorCarrinho = document.getElementById("cart-count");
+    if (contadorCarrinho)
+        contadorCarrinho.innerText = String(total);
+}
+function calcularTotalCarrinho() {
+    return carrinho.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
+}
+function itemCarrinhoHtml(item) {
+    const temImagem = Boolean(item.imagem && item.imagem.trim() !== "");
+    const imagemHtml = temImagem
+        ? `<img src="${item.imagem}" alt="${item.nome}">`
+        : `<i class="bi bi-trophy-fill"></i>`;
+    return `
+    <div class="carrinho-item">
+      <div class="carrinho-item-imagem">${imagemHtml}</div>
+      <div class="flex-grow-1">
+        <p class="fw-semibold mb-1" style="font-size: 0.9rem;">${item.nome}</p>
+        <p class="text-muted small mb-2">${formatarMoeda(item.preco)} un.</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="carrinho-qtd-controle">
+            <button type="button" class="btn-carrinho-menos" data-nome="${item.nome}">-</button>
+            <span>${item.quantidade}</span>
+            <button type="button" class="btn-carrinho-mais" data-nome="${item.nome}">+</button>
+          </div>
+          <button type="button" class="carrinho-item-remover" data-nome="${item.nome}">Remover</button>
+        </div>
+      </div>
+    </div>`;
+}
+function renderizarCarrinho() {
+    const lista = document.getElementById("carrinho-lista");
+    const rodape = document.getElementById("carrinho-rodape");
+    const totalEl = document.getElementById("carrinho-total");
+    if (!lista)
+        return;
+    if (carrinho.length === 0) {
+        lista.innerHTML = `<div class="carrinho-vazio"><i class="bi bi-bag-x"></i>Seu carrinho está vazio.</div>`;
+        if (rodape)
+            rodape.style.display = "none";
+        return;
+    }
+    if (rodape)
+        rodape.style.display = "block";
+    lista.innerHTML = carrinho.map(itemCarrinhoHtml).join("");
+    if (totalEl)
+        totalEl.innerText = formatarMoeda(calcularTotalCarrinho());
+    document.querySelectorAll(".btn-carrinho-mais").forEach((btn) => {
+        btn.onclick = () => { var _a; return alterarQuantidadeCarrinho((_a = btn.getAttribute("data-nome")) !== null && _a !== void 0 ? _a : "", 1); };
+    });
+    document.querySelectorAll(".btn-carrinho-menos").forEach((btn) => {
+        btn.onclick = () => { var _a; return alterarQuantidadeCarrinho((_a = btn.getAttribute("data-nome")) !== null && _a !== void 0 ? _a : "", -1); };
+    });
+    document.querySelectorAll(".carrinho-item-remover").forEach((btn) => {
+        btn.onclick = () => { var _a; return removerDoCarrinho((_a = btn.getAttribute("data-nome")) !== null && _a !== void 0 ? _a : ""); };
+    });
+}
+function alterarQuantidadeCarrinho(nome, delta) {
+    const item = carrinho.find((i) => i.nome === nome);
+    if (!item)
+        return;
+    item.quantidade += delta;
+    if (item.quantidade <= 0) {
+        carrinho = carrinho.filter((i) => i.nome !== nome);
+    }
+    atualizarContadorCarrinho();
+    renderizarCarrinho();
+}
+function removerDoCarrinho(nome) {
+    carrinho = carrinho.filter((i) => i.nome !== nome);
+    atualizarContadorCarrinho();
+    renderizarCarrinho();
+}
+function configurarCarrinho() {
+    const btnCarrinho = document.getElementById("btn-carrinho");
+    const offcanvasEl = document.getElementById("offcanvas-carrinho");
+    if (btnCarrinho && offcanvasEl) {
+        btnCarrinho.onclick = () => {
+            renderizarCarrinho();
+            const bootstrap = window.bootstrap;
+            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
+            offcanvas.show();
+        };
+    }
+    const btnFinalizarCarrinho = document.getElementById("btn-finalizar-carrinho");
+    btnFinalizarCarrinho === null || btnFinalizarCarrinho === void 0 ? void 0 : btnFinalizarCarrinho.addEventListener("click", () => {
+        var _a;
+        if (carrinho.length === 0 || !offcanvasEl)
+            return;
+        const bootstrap = window.bootstrap;
+        (_a = bootstrap.Offcanvas.getInstance(offcanvasEl)) === null || _a === void 0 ? void 0 : _a.hide();
+        const totalItens = carrinho.reduce((soma, item) => soma + item.quantidade, 0);
+        const rotulo = `Carrinho (${totalItens} ${totalItens === 1 ? "item" : "itens"})`;
+        abrirCheckout(rotulo, calcularTotalCarrinho());
+    });
+}
+// ============================================================
+// Checkout: modal de pagamento (Crédito, Débito e Pix)
+// ============================================================
+let checkoutProduto = null;
+let checkoutMetodoSelecionado = null;
+function formatarMoeda(valor) {
+    return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+function abrirCheckout(nome, preco) {
+    checkoutProduto = { nome, preco };
+    checkoutMetodoSelecionado = null;
+    const nomeEl = document.getElementById("checkout-nome-produto");
+    const precoEl = document.getElementById("checkout-preco-produto");
+    if (nomeEl)
+        nomeEl.innerText = nome;
+    if (precoEl)
+        precoEl.innerText = formatarMoeda(preco);
+    popularParcelas(preco);
+    resetarFormularioCheckout();
+    const modalEl = document.getElementById("modal-checkout");
+    if (!modalEl)
+        return;
+    const bootstrap = window.bootstrap;
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+}
+function popularParcelas(preco) {
+    const select = document.getElementById("checkout-cartao-parcelas");
+    if (!select)
+        return;
+    // Máximo de 10x sem juros, igual à faixa anunciada na barra amarela do topo
+    const maxParcelas = 10;
+    let opcoes = "";
+    for (let i = 1; i <= maxParcelas; i++) {
+        const valorParcela = formatarMoeda(preco / i);
+        opcoes += `<option value="${i}">${i}x de ${valorParcela} sem juros</option>`;
+    }
+    select.innerHTML = opcoes;
+}
+function resetarFormularioCheckout() {
+    checkoutMetodoSelecionado = null;
+    document.querySelectorAll(".metodo-pagamento").forEach((el) => el.classList.remove("selecionado"));
+    document.querySelectorAll(".checkout-form-pagamento").forEach((el) => el.classList.remove("ativo"));
+    const camposCartao = ["checkout-cartao-numero", "checkout-cartao-nome", "checkout-cartao-validade", "checkout-cartao-cvv"];
+    camposCartao.forEach((id) => {
+        const campo = document.getElementById(id);
+        if (campo)
+            campo.value = "";
+    });
+    const telaPagamento = document.getElementById("checkout-tela-pagamento");
+    const telaSucesso = document.getElementById("checkout-tela-sucesso");
+    const rodape = document.getElementById("checkout-rodape-pagamento");
+    if (telaPagamento)
+        telaPagamento.style.display = "block";
+    if (telaSucesso)
+        telaSucesso.classList.remove("ativo");
+    if (rodape)
+        rodape.style.display = "flex";
+    atualizarBotaoFinalizar();
+}
+function atualizarBotaoFinalizar() {
+    const botao = document.getElementById("btn-finalizar-compra");
+    if (!botao)
+        return;
+    if (!checkoutMetodoSelecionado || !checkoutProduto) {
+        botao.disabled = true;
+        botao.innerText = "Selecione uma forma de pagamento";
+        return;
+    }
+    botao.disabled = false;
+    botao.innerText = `Finalizar compra · ${formatarMoeda(checkoutProduto.preco)}`;
+}
+function selecionarMetodoPagamento(metodo) {
+    checkoutMetodoSelecionado = metodo;
+    document.querySelectorAll(".metodo-pagamento").forEach((el) => {
+        el.classList.toggle("selecionado", el.getAttribute("data-metodo") === metodo);
+    });
+    const formCartao = document.getElementById("checkout-form-cartao");
+    const formPix = document.getElementById("checkout-form-pix");
+    const parcelasWrapper = document.getElementById("checkout-parcelas-wrapper");
+    if (metodo === "pix") {
+        formCartao === null || formCartao === void 0 ? void 0 : formCartao.classList.remove("ativo");
+        formPix === null || formPix === void 0 ? void 0 : formPix.classList.add("ativo");
+    }
+    else {
+        formPix === null || formPix === void 0 ? void 0 : formPix.classList.remove("ativo");
+        formCartao === null || formCartao === void 0 ? void 0 : formCartao.classList.add("ativo");
+        // Débito não parcela, só o crédito
+        if (parcelasWrapper)
+            parcelasWrapper.style.display = metodo === "credito" ? "block" : "none";
+    }
+    atualizarBotaoFinalizar();
+}
+function finalizarCompra() {
+    if (!checkoutProduto || !checkoutMetodoSelecionado)
+        return;
+    carrinho = [];
+    atualizarContadorCarrinho();
+    const telaPagamento = document.getElementById("checkout-tela-pagamento");
+    const telaSucesso = document.getElementById("checkout-tela-sucesso");
+    const rodape = document.getElementById("checkout-rodape-pagamento");
+    if (telaPagamento)
+        telaPagamento.style.display = "none";
+    if (telaSucesso)
+        telaSucesso.classList.add("ativo");
+    if (rodape)
+        rodape.style.display = "none";
+}
+function configurarCheckout() {
+    document.querySelectorAll(".metodo-pagamento").forEach((el) => {
+        el.addEventListener("click", () => {
+            const metodo = el.getAttribute("data-metodo");
+            if (metodo)
+                selecionarMetodoPagamento(metodo);
+        });
+    });
+    const botaoFinalizar = document.getElementById("btn-finalizar-compra");
+    botaoFinalizar === null || botaoFinalizar === void 0 ? void 0 : botaoFinalizar.addEventListener("click", finalizarCompra);
+    const botaoCopiarPix = document.getElementById("btn-copiar-pix");
+    botaoCopiarPix === null || botaoCopiarPix === void 0 ? void 0 : botaoCopiarPix.addEventListener("click", () => {
+        var _a;
+        const campoPix = document.getElementById("checkout-pix-codigo");
+        if (!campoPix)
+            return;
+        campoPix.select();
+        (_a = navigator.clipboard) === null || _a === void 0 ? void 0 : _a.writeText(campoPix.value).catch(() => { });
+        const icone = botaoCopiarPix.querySelector("i");
+        if (icone) {
+            icone.className = "bi bi-check2";
+            setTimeout(() => (icone.className = "bi bi-clipboard"), 1500);
+        }
+    });
+    const modalEl = document.getElementById("modal-checkout");
+    modalEl === null || modalEl === void 0 ? void 0 : modalEl.addEventListener("hidden.bs.modal", () => {
+        resetarFormularioCheckout();
+        checkoutProduto = null;
+    });
+}
 function cartaoProduto(prod) {
-    const precoFormatado = formatarMoeda(parseFloat(prod.preco_venda));
+    var _a;
+    const precoFormatado = parseFloat(prod.preco_venda).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    });
     const esgotado = prod.estoque_atual <= 0;
     const botaoHtml = esgotado
         ? `<button class="btn btn-secondary w-100 rounded-3 py-2 fw-semibold" disabled>Esgotado</button>`
-        : `<button class="btn btn-buy-custom w-100 btn-comprar" data-id="${prod.id}"><i class="bi bi-cart-plus me-2"></i>Comprar</button>`;
+        : `<button class="btn btn-buy-custom w-100 btn-comprar" data-nome="${prod.nome}" data-preco="${prod.preco_venda}" data-imagem="${(_a = prod.imagem) !== null && _a !== void 0 ? _a : ""}"><i class="bi bi-cart-plus me-2"></i>Comprar</button>`;
     const estilo = estiloCategoria(prod.categoria);
     const temImagem = Boolean(prod.imagem && prod.imagem.trim() !== "");
     const imagemHtml = temImagem
@@ -299,7 +388,7 @@ function cartaoProduto(prod) {
         : `<div class="produto-placeholder d-flex align-items-center justify-content-center h-100" style="background: linear-gradient(135deg, ${estilo.cor}, #000000); border-radius: 10px;"><i class="bi ${estilo.icone} text-warning" style="font-size: 3rem;"></i></div>`;
     return `
     <div class="col">
-      <div class="card product-card h-100 shadow-sm" data-id="${prod.id}">
+      <div class="card product-card h-100 shadow-sm">
         <div class="product-img-container text-center p-3" style="height: 220px;">
           <span class="badge-category">${prod.categoria}</span>
           ${imagemHtml}
@@ -351,36 +440,10 @@ function configurarBusca() {
     });
 }
 document.addEventListener("DOMContentLoaded", () => {
-    // @ts-ignore - bootstrap vem do bundle carregado via CDN, sem tipos
-    const offcanvasEl = document.getElementById("offcanvasCarrinho");
-    // @ts-ignore
-    if (offcanvasEl)
-        offcanvasCarrinho = new bootstrap.Offcanvas(offcanvasEl);
-    const modalEl = document.getElementById("modalDetalheProduto");
-    // @ts-ignore
-    if (modalEl)
-        modalDetalheProduto = new bootstrap.Modal(modalEl);
     carregarCategorias();
     carregarLoja();
     configurarBusca();
-    renderizarCarrinho();
-    const btnCarrinho = document.getElementById("btn-carrinho");
-    if (btnCarrinho) {
-        btnCarrinho.onclick = () => {
-            if (offcanvasCarrinho)
-                offcanvasCarrinho.show();
-        };
-    }
-    const btnFinalizar = document.getElementById("btn-finalizar-compra");
-    if (btnFinalizar) {
-        btnFinalizar.onclick = () => {
-            if (carrinhoItens.length === 0) {
-                mostrarToast("Seu carrinho está vazio.");
-                return;
-            }
-            mostrarToast("Finalização de compra ainda não implementada neste projeto.");
-        };
-    }
+    configurarCheckout();
+    configurarCarrinho();
 });
 export {};
-

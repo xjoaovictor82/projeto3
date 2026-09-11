@@ -1,0 +1,17 @@
+body {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.image-download-table {
+  border-collapse: collapse;
+}
+.image-download-table th,
+.image-download-table td {
+  padding: 6px;
+}
+.image-download-status-ok {
+  background-color: #e6ffed;
+}
+.image-download-status-error {
+  background-color: #ffe6e6;
+}

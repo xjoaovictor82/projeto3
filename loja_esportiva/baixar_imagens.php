@@ -124,11 +124,12 @@ try {
     }
 
     echo "<h3>Download concluído</h3>";
-    echo "<table border='1' cellpadding='6' cellspacing='0' style='border-collapse:collapse;font-family:sans-serif;font-size:14px;'>";
+    echo "<link rel='stylesheet' href='css/baixar-imagens.css'>";
+    echo "<table border='1' class='image-download-table'>";
     echo "<tr><th>Produto</th><th>Status</th><th>Detalhe</th></tr>";
     foreach ($relatorio as $linha) {
-        $cor = $linha['status'] === 'ok' ? '#e6ffed' : '#ffe6e6';
-        echo "<tr style='background:{$cor}'><td>{$linha['produto']}</td><td>{$linha['status']}</td><td>{$linha['detalhe']}</td></tr>";
+        $classeStatus = $linha['status'] === 'ok' ? 'image-download-status-ok' : 'image-download-status-error';
+        echo "<tr class='{$classeStatus}'><td>{$linha['produto']}</td><td>{$linha['status']}</td><td>{$linha['detalhe']}</td></tr>";
     }
     echo "</table>";
     echo "<br><a href='index.php'>Ver a loja</a> | <a href='admin.php'>Ir para o painel</a>";
