@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel='stylesheet' href='css/index.css'>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
         <div class="container py-3">
             <div class="row align-items-center g-2">
                 <div class="col-6 col-md-2 order-md-0">
-                    <h3 class="fw-extrabold m-0 tracking-wider cursor-pointer btn-categoria store-logo">
+                    <h3 class="fw-extrabold m-0 tracking-wider cursor-pointer btn-categoria" data-categoria="todas" style="letter-spacing: -1px; font-size: clamp(1.15rem, 4vw, 1.75rem);">
                         <i class="bi bi-lightning-charge-fill text-warning"></i> SPORTFIT
                     </h3>
                 </div>
@@ -108,7 +108,7 @@
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-lg-6">
-                    <h3 class="fw-extrabold text-uppercase mb-3 store-logo">
+                    <h3 class="fw-extrabold text-uppercase mb-3" style="letter-spacing: -1px;">
                         <i class="bi bi-lightning-charge-fill text-warning"></i> Sobre a SportFit
                     </h3>
                     <p class="text-white-50 mb-3">
@@ -269,7 +269,7 @@
             <div id="carrinho-lista" class="flex-grow-1 overflow-auto px-3">
                 <!-- Itens do carrinho gerados via JS (js/app.js) -->
             </div>
-            <div class="border-top p-3 cart-footer" id="carrinho-rodape">
+            <div class="border-top p-3" id="carrinho-rodape" style="display: none;">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span class="fw-semibold">Total</span>
                     <span class="fw-extrabold fs-5" id="carrinho-total">R$ 0,00</span>
