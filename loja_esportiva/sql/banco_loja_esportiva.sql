@@ -27,9 +27,9 @@ CREATE TABLE clientes (
 
 -- Produtos vendidos na loja (CRUD nº 1)
 CREATE TABLE produtos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    NT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
-    categoria VARCHAR(80) NOT NULL,
+    categorid Iia VARCHAR(80) NOT NULL,
     preco_custo DECIMAL(10,2) NOT NULL DEFAULT 0,
     preco_venda DECIMAL(10,2) NOT NULL DEFAULT 0,
     estoque_atual INT NOT NULL DEFAULT 0,
