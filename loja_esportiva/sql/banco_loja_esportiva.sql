@@ -1,12 +1,4 @@
--- ============================================================
--- BANCO DE DADOS: loja_esportiva
--- Projeto: SportFit Store - Dashboard Administrativo
--- Compatível com MariaDB (XAMPP)
---
--- Este script cria o banco do zero. Rode-o inteiro de uma vez
--- no phpMyAdmin (aba SQL) ou via linha de comando:
---   mysql -u root -p < banco_loja_esportiva.sql
--- ============================================================
+
 
 DROP DATABASE IF EXISTS loja_esportiva;
 CREATE DATABASE loja_esportiva CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -70,11 +62,8 @@ CREATE TABLE itens_venda (
 CREATE INDEX idx_produtos_categoria ON produtos(categoria);
 CREATE INDEX idx_vendas_data ON vendas(data_venda);
 
--- ============================================================
+
 -- 2. TRIGGER (BEFORE UPDATE) - padroniza valores positivos
--- Rubrica: "Implementação de Triggers (BEFORE UPDATE) para
--- padronizar a inserção de valores positivos."
--- ============================================================
 
 DELIMITER $$
 
@@ -112,14 +101,9 @@ END$$
 
 DELIMITER ;
 
--- ============================================================
+
 -- 3. FUNÇÃO REUTILIZÁVEL
--- Rubrica: "Criação de uma função no banco de dados para
--- reutilização de scripts massivos ou complexos."
--- Calcula a margem de lucro (%) de um produto. É usada tanto
--- pelas Views quanto pelas Stored Procedures abaixo, evitando
--- repetir a mesma conta em vários lugares.
--- ============================================================
+-- Calcula a margem de lucro (%) de um produto.
 
 DELIMITER $$
 
@@ -137,12 +121,9 @@ END$$
 
 DELIMITER ;
 
--- ============================================================
+
 -- 4. VIEW que consolida informações de várias tabelas
--- Rubrica: "Criação de View que centralize informações
--- importantes no sistema e que estão em diversas tabelas
--- distintas."
--- ============================================================
+
 
 CREATE VIEW vw_vendas_detalhadas AS
 SELECT
@@ -163,12 +144,9 @@ LEFT JOIN clientes c ON c.id = v.cliente_id
 JOIN itens_venda iv ON iv.venda_id = v.id
 JOIN produtos p   ON p.id = iv.produto_id;
 
--- ============================================================
+
 -- 5. CTEs e VIEWS ANALÍTICAS
--- Rubrica: "Criação de CTEs e Views analíticas no MariaDB que
--- limpem e consolidem os dados brutos do sistema, entregando-os
--- perfeitamente estruturados."
--- ============================================================
+
 
 -- 5.1: resumo geral para os cards do topo da dashboard
 CREATE VIEW vw_dashboard_resumo AS
@@ -253,13 +231,9 @@ SELECT
 FROM clientes c
 LEFT JOIN compras_cliente cc ON cc.cliente_id = c.id;
 
--- ============================================================
+
 -- 6. STORED PROCEDURES
--- Rubrica: "Desenvolvimento de Stored Procedures otimizadas
--- para centralizar a busca, filtros e paginação dos indicadores
--- da dashboard, permitindo que a API em PHP faça chamadas
--- limpas (CALL) e assíncronas."
--- ============================================================
+
 
 -- 6.1: busca + filtro por categoria + paginação de produtos
 DELIMITER $$
@@ -387,7 +361,7 @@ END$$
 DELIMITER ;
 
 -- ============================================================
--- 7. DADOS DE EXEMPLO (opcional, ajuda a testar dashboard/CRUD)
+-- 7. DADOS DE EXEMPLO 
 -- ============================================================
 
 -- Produtos sem foto própria ficam com imagem = '' de propósito: o site
@@ -456,6 +430,3 @@ INSERT INTO itens_venda (venda_id, produto_id, quantidade, preco_unitario) VALUE
 (4, 6, 1, 229.90);
 
 -- Observação: a senha do usuário 'admin' criado acima é "admin123".
--- criar_admin.php continua disponível caso você queira trocar essa senha
--- depois - ele sempre atualiza o hash do usuário 'admin' com a senha que
--- estiver escrita nele.
